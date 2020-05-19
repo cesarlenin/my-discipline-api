@@ -146,47 +146,47 @@ function makeExpectedHabits(users, habit, actions=[]) {
   }
 }
 
-// function makeExpectedThingReviews(users, thingId, reviews) {
-//   const expectedReviews = reviews
-//     .filter(review => review.thing_id === thingId)
+function makeExpectedThingReviews(users, thingId, reviews) {
+  const expectedReviews = reviews
+    .filter(review => review.thing_id === thingId)
 
-//   return expectedReviews.map(review => {
-//     const reviewUser = users.find(user => user.id === review.user_id)
-//     return {
-//       id: review.id,
-//       text: review.text,
-//       rating: review.rating,
-//       date_created: review.date_created,
-//       user: {
-//         id: reviewUser.id,
-//         user_name: reviewUser.user_name,
-//         full_name: reviewUser.full_name,
-//         nickname: reviewUser.nickname,
-//         date_created: reviewUser.date_created,
-//       }
-//     }
-//   })
-// }
+  return expectedReviews.map(review => {
+    const reviewUser = users.find(user => user.id === review.user_id)
+    return {
+      id: review.id,
+      text: review.text,
+      rating: review.rating,
+      date_created: review.date_created,
+      user: {
+        id: reviewUser.id,
+        user_name: reviewUser.user_name,
+        full_name: reviewUser.full_name,
+        nickname: reviewUser.nickname,
+        date_created: reviewUser.date_created,
+      }
+    }
+  })
+}
 
-// function makeMaliciousThing(user) {
-//   const maliciousThing = {
-//     id: 911,
-//     image: 'http://placehold.it/500x500',
-//     date_created: new Date().toISOString(),
-//     title: 'Naughty naughty very naughty <script>alert("xss");</script>',
-//     user_id: user.id,
-//     content: `Bad image <img src="https://url.to.file.which/does-not.exist" onerror="alert(document.cookie);">. But not <strong>all</strong> bad.`,
-//   }
-//   const expectedThing = {
-//     ...makeExpectedHabits([user], maliciousThing),
-//     title: 'Naughty naughty very naughty &lt;script&gt;alert(\"xss\");&lt;/script&gt;',
-//     content: `Bad image <img src="https://url.to.file.which/does-not.exist">. But not <strong>all</strong> bad.`,
-//   }
-//   return {
-//     maliciousThing,
-//     expectedThing,
-//   }
-// }
+function makeMaliciousThing(user) {
+  const maliciousThing = {
+    id: 911,
+    image: 'http://placehold.it/500x500',
+    date_created: new Date().toISOString(),
+    title: 'Naughty naughty very naughty <script>alert("xss");</script>',
+    user_id: user.id,
+    content: `Bad image <img src="https://url.to.file.which/does-not.exist" onerror="alert(document.cookie);">. But not <strong>all</strong> bad.`,
+  }
+  const expectedThing = {
+    ...makeExpectedHabits([user], maliciousThing),
+    title: 'Naughty naughty very naughty &lt;script&gt;alert(\"xss\");&lt;/script&gt;',
+    content: `Bad image <img src="https://url.to.file.which/does-not.exist">. But not <strong>all</strong> bad.`,
+  }
+  return {
+    maliciousThing,
+    expectedThing,
+  }
+}
 
 function makeThingsFixtures() {
   const testUsers = makeUsersArray()
@@ -232,31 +232,31 @@ function seedUsers(db, users) {
     )
 }
 
-function seedThingsTables(db, users, things, reviews=[]) {
+function seedHabitsTables(db, users, habits, actions=[]) {
   return db.transaction(async trx => {
     await seedUsers(trx, users)
-    await trx.into('my_discipline_habit').insert(things)
+    await trx.into('my_discipline_habit').insert(habits)
     await trx.raw(
       `SELECT setval('my_discipline_habit_id_seq', ?)`,
-      [things[things.length - 1].id],
+      [habits[habits.length - 1].id],
     )
-    if (reviews.length) {
-      await trx.into('my_discipline_actions').insert(reviews)
+    if (actions.length) {
+      await trx.into('my_discipline_actions').insert(actions)
       await trx.raw(
         `SELECT setval('my_discipline_actions_id_seq', ?)`,
-        [reviews[reviews.length - 1].id],
+        [actions[actions.length - 1].id],
       )
     }
   })
 }
 
 
-function seedMaliciousThing(db, user, thing) {
+function seedMaliciousThing(db, user, habit) {
   return seedUsers(db, [user])
     .then(() =>
       db
         .into('my_discipline_habit')
-        .insert([thing])
+        .insert([habit])
     )
 }
 
@@ -275,13 +275,13 @@ module.exports = {
   makeUsersArray,
   makeHabitsArray,
   makeExpectedHabits,
-  // makeExpectedThingReviews,
-  // makeMaliciousThing,
+  makeExpectedThingReviews,
+  makeMaliciousThing,
   makeActionsArray,
 
   makeThingsFixtures,
   cleanTables,
-  seedThingsTables,
+  seedHabitsTables,
   seedMaliciousThing,
   seedUsers
 }
