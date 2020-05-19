@@ -1,7 +1,6 @@
 CREATE TABLE my_discipline_actions (
     id SERIAL PRIMARY KEY,
-    bool BOOLEAN NOT NULL,
-    date_created TIMESTAMPTZ DEFAULT  NOT NULL,
+    date_created TIMESTAMPTZ NOT NULL DEFAULT now(),
     habit_id INTEGER
         REFERENCES my_discipline_habit(id) ON DELETE CASCADE NOT NULL,
     user_id INTEGER

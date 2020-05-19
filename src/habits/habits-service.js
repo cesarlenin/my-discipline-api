@@ -10,12 +10,13 @@ const HabitsService = {
         'md.habit_name',
         'md.date_created',
         'md.description ',
-        'md.goal'
+        'md.goal',
+        ...userFields
       )
       .leftJoin(
         'my_discipline_action  AS act',
         'md.id',
-        'md.habit_id'
+        'act.habit_id'
       )
       .leftJoin(
         'thingful_users AS usr',
@@ -31,24 +32,6 @@ const HabitsService = {
       .first();
   },
 
-  getActionsForHabits(db, habit_id) {
-    return db
-      .from('my_discipline_action AS act')
-      .select(
-        'act.id',
-        'act.bool',
-        'act.date_created',
-        ...userFields
-      )
-      .where('md.habit_id)', habit_id)
-      .leftJoin(
-        'my_discipline_users AS usr',
-        'md.user_id',
-        'usr.id'
-      )
-      .groupBy('md.id', 'usr.id');
-  },
-
   serializeHabits(habits) {
     return habits.map(this.serializeHabit);
   },
@@ -56,9 +39,6 @@ const HabitsService = {
   serializeHabit(habit) {
     const habitTree = new Treeize();
 
-    // Some light hackiness to allow for the fact that `treeize`
-    // only accepts arrays of objects, and we want to use a single
-    // object.
     const habitData = habitTree.grow([ habit ]).getData()[0];
 
     return {
@@ -78,9 +58,6 @@ const HabitsService = {
   serializeHabitAction(action) {
     const actionTree = new Treeize();
 
-    // Some light hackiness to allow for the fact that `treeize`
-    // only accepts arrays of objects, and we want to use a single
-    // object.
     const actionData = actionTree.grow([ action ]).getData()[0];
 
     return {
@@ -103,3 +80,18 @@ const userFields = [
 ];
 
 module.exports = HabitsService;
+
+// get habits
+// get by id
+// insert habit
+// delete by id 
+// update by id 
+// get actions for habits?
+
+// get action
+// insert action
+// getbyhabit Id & date?
+
+
+
+
