@@ -1,4 +1,4 @@
-CREATE TABLE my_discipline_action (
+CREATE TABLE my_discipline_actions (
     id SERIAL PRIMARY KEY,
     bool BOOLEAN NOT NULL,
     date_created TIMESTAMPTZ DEFAULT  NOT NULL,

@@ -3,7 +3,7 @@ BEGIN;
 TRUNCATE
   my_discipline_habit,
   my_discipline_users,
-  my_discipline_action
+  my_discipline_actions
   RESTART IDENTITY CASCADE;
 
 INSERT INTO my_discipline_users (user_name, full_name, nickname, password)
@@ -28,7 +28,7 @@ VALUES
   ('ride a motocycle', 2, 3, 'Get home quicker than either Uber or Lyft! Three taps of the heels is all it takes. One size fits all.'),
   ( 'eat healthy', 1, 4, 'May or may not produce a genie.');
 
-INSERT INTO my_discipline_action (bool, habit_id, user_id)
+INSERT INTO my_discipline_actions (bool, habit_id, user_id)
  VALUES
   (TRUE,1,2),
   (TRUE,1,3),
