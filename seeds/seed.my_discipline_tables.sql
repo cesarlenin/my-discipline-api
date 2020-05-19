@@ -28,7 +28,7 @@ VALUES
   ('ride a motocycle', 2, 3, 'Get home quicker than either Uber or Lyft! Three taps of the heels is all it takes. One size fits all.'),
   ( 'eat healthy', 1, 4, 'May or may not produce a genie.');
 
-INSERT INTO my_discipline_actions (bool, habit_id, user_id)
+INSERT INTO my_discipline_actions (habit_id, user_id)
  VALUES
   (1,2),
   (1,3),

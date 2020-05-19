@@ -92,6 +92,6 @@ module.exports = HabitsService;
 // insert action
 // getbyhabit Id & date?
 
-
+// FIND 7 entries ORDERBY DATE ASC
 
 
