@@ -28,9 +28,16 @@ actionsRouter
       habit_id,
       user_id: req.user.id
     };
-    if (!date_created || new Date(date_created)=== 'Invalid Date') {
-      logger.error('date needs to be a date');
-      return res.status(400).send('date needs to be a date');
+    
+    function isIsoDate(str) {
+      if (!/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z/.test(str)) return false;
+      var d = new Date(str); 
+      return d.toISOString()===str;
+    }
+
+    if (!date_created || isIsoDate(date_created)=== 'Invalid Date') {
+      logger.error('date needs to be a date in UTC');
+      return res.status(400).send('date needs to be a in UTC');
     } 
     if (!habit_id || !Number.isInteger(Number(habit_id))) {
       logger.error('habit id needs to be a number');
