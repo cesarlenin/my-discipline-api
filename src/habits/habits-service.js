@@ -4,26 +4,26 @@ const Treeize = require('treeize');
 const HabitsService = {
   getAllHabits(db,userId) {
     return db
-      .from('my_discipline_habit AS md')
+      .from('my_discipline_habit')
       .select(
-        'md.id',
-        'md.habit_name',
-        'md.date_created',
-        'md.description ',
-        'md.goal'
+        'id',
+        'habit_name',
+        'date_created',
+        'description ',
+        'goal'
       )
       .where({'user_id': userId});
   },
 
   getById(db, userId, id) {
     return   db   
-      .from('my_discipline_habit AS md')
+      .from('my_discipline_habit')
       .select(
-        'md.id',
-        'md.habit_name',
-        'md.date_created',
-        'md.description ',
-        'md.goal'
+        'id',
+        'habit_name',
+        'date_created',
+        'description ',
+        'goal'
       )
       .where({'id':id, 'user_id': userId})
       .first();
