@@ -65,23 +65,6 @@ const HabitsService = {
       goal: habitData.goal,
     };
   },
-
-  serializeHabitActions(actions) {
-    return actions.map(this.serializeHabitAction);
-  },
-
-  serializeHabitAction(action) {
-    const actionTree = new Treeize();
-
-    const actionData = actionTree.grow([ action ]).getData()[0];
-
-    return {
-      id: actionData.id,
-      bool: actionData.bool,
-      habit_id: actionData.habit_id,
-      date_created: actionData.date_created,
-    };
-  },
 };
 
 module.exports = HabitsService;

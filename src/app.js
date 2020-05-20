@@ -7,7 +7,7 @@ const { NODE_ENV} = require('./config');
 // const validateBearerToken = require('./validate-bearer-token');
 const errorHandler = require('./error-handler');
 const habitsRouter = require('./habits/habits-router');
-// const actionsRouter = require('./actions/actions-router');
+const actionsRouter = require('./actions/actions-router');
 const authRouter = require('./auth/auth-router');
 
 
@@ -22,7 +22,7 @@ app.use(cors());
 // app.use(validateBearerToken);
 
 app.use('/api/habits',habitsRouter);
-// app.use('/api/actions',actionsRouter);
+app.use('/api/actions',actionsRouter);
 app.use('/api/auth', authRouter);
 
 app.get('/', (req, res) => {
