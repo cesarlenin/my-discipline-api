@@ -12,24 +12,40 @@ const HabitsService = {
         'md.description ',
         'md.goal'
       )
-      // .leftJoin(
-      //   'my_discipline_actions  AS act',
-      //   'md.id',
-      //   'act.habit_id'
-      // )
-      .leftJoin(
-        'my_discipline_users AS usr',
-        'md.user_id',
-        'usr.id'
-      )
-      .groupBy('md.id', 'usr.id')
-      .where('usr.id', userId);
+      .where({'user_id': userId});
   },
 
   getById(db, userId, id) {
-    return HabitsService.getAllHabits(db, userId)
-      .where('md.id', id)
+    return   db   
+      .from('my_discipline_habit AS md')
+      .select(
+        'md.id',
+        'md.habit_name',
+        'md.date_created',
+        'md.description ',
+        'md.goal'
+      )
+      .where({'id':id, 'user_id': userId})
       .first();
+  },
+
+  insertHabit(db, data) {
+    return db('my_discipline_habit')
+      .insert(data)
+      .returning('*')
+      .then(rows => rows[0]);
+  },
+
+  deleteById(db,userId, id) {
+    return db('my_discipline_habit')
+      .where({'id':id, 'user_id': userId})
+      .delete();
+  },
+
+  updateById(db,userId, id, data) {
+    return db('my_discipline_habit')
+      .where({'id':id, 'user_id': userId})
+      .update(data);
   },
 
   serializeHabits(habits) {
@@ -47,7 +63,6 @@ const HabitsService = {
       description: xss(habitData.description),
       date_created: habitData.date_created,
       goal: habitData.goal,
-      // user: habitData.user || {}
     };
   },
 
@@ -64,34 +79,11 @@ const HabitsService = {
       id: actionData.id,
       bool: actionData.bool,
       habit_id: actionData.habit_id,
-      // user: actionData.user || {},
       date_created: actionData.date_created,
     };
   },
 };
 
-const userFields = [
-  'usr.id AS user:id',
-  'usr.user_name AS user:user_name',
-  'usr.full_name AS user:full_name',
-  'usr.nickname AS user:nickname',
-  'usr.date_created AS user:date_created',
-  'usr.date_modified AS user:date_modified',
-];
-
 module.exports = HabitsService;
-
-// get habits
-// get by id
-// insert habit
-// delete by id 
-// update by id 
-// get actions for habits?
-
-// get action
-// insert action
-// getbyhabit Id & date?
-
-// FIND 7 entries ORDERBY DATE ASC
 
 

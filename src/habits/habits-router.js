@@ -1,62 +1,116 @@
-const express = require('express')
-const HabitsService = require('./habits-service')
+const express = require('express');
+const logger = require('../logger');
+const HabitsService = require('./habits-service');
 const { requireAuth } = require('../../middleware/jwt-auth');
 
-const habitsRouter = express.Router()
+const habitsRouter = express.Router();
+const bodyParser = express.json();
 
 habitsRouter
   .route('/')
   .all(requireAuth)
   .get((req, res, next) => {
-    // console.log(req.user)
-    //get user_id from the authToken
     HabitsService.getAllHabits(req.app.get('db'),req.user.id)
       .then(habits => {
-        res.json(HabitsService.serializeHabits(habits))
+        res.json(HabitsService.serializeHabits(habits));
       })
-      .catch(next)
+      .catch(next);
   })
 
-  // habitsRouter
-  // .route('/:habit_id')
-  // .all(checkHabitsExists)
-  // .all(requireAuth)
-  // .get((req, res) => {
-  //   res.json(HabitsService.serializeHabit(res.thing))
-  // })
+  .post(bodyParser, (req, res, next) => {
+    const { 
+      habit_name,
+      goal,
+      description
+    } = req.body;
+    
+    const newHabit = { 
+      habit_name,
+      goal,
+      description,
+      user_id: req.user.id
+    };
 
-  // habitsRouter.route('/:thing_id/reviews/')
-  // .all(checkHabitsExists)
-  // .all(requireAuth)
-  // .get((req, res, next) => {
-  //   HabitsService.getReviewsForThing(
-  //     req.app.get('db'),
-  //     req.params.thing_id
-  //   )
-  //     .then(reviews => {
-  //       res.json(HabitsService.serializeThingReviews(reviews))
-  //     })
-  //     .catch(next)
-  // })
-
-/* async/await syntax for promises */
-async function checkHabitsExists(req, res, next) {
-  try {
-    const habits = await HabitsService.getById(
-      req.app.get('db'),
-      req.params.habits_id
-    )
-
-    if (!habits)
-      return res.status(404).json({
-        error: `habits doesn't exist`
+    if (!habit_name) {
+      logger.error('name is required');
+      return res.status(400).send('name is required');
+    }
+    if (!goal || !Number.isInteger(Number(goal))) {
+      logger.error('goal needs to be a number');
+      return res.status(400).send('goal needs to be a number');
+    } 
+    if (!description) {
+      logger.error('description id is required');
+      return res.status(400).send('description id is required');
+    }
+    HabitsService.insertHabit(req.app.get('db'),newHabit)
+      .then(habit => {
+        res.json(habit);
       })
+      .catch(next);
+  });
 
-    res.habits = habits
-    next()
-  } catch (error) {
-    next(error)
-  }
-}
 
-module.exports = habitsRouter
+habitsRouter
+  .route('/:id')
+  .all(requireAuth)
+  .get((req, res,next) => {
+    HabitsService.getById(req.app.get('db'),req.user.id,req.params.id)
+      .then(habit => {
+        if (!habit) {
+          logger.error('habit was not found');
+          return res.status(404).json({error: { message: 'habit was not found' }});
+        }
+        res.json(HabitsService.serializeHabit(habit));
+      })
+      .catch(next);
+  })
+  .delete((req, res, next) => {
+    HabitsService.deleteById(req.app.get('db'),req.user.id,req.params.id)
+      .then(numRowsAffected => {
+        if (!numRowsAffected) {
+          logger.error('habit was not found');
+          return res.status(404).json({
+            error: { message: 'habit was not found' }
+          });
+        }
+        res
+          .status(204)
+          .end();
+      })
+      .catch(next);
+  })
+  .patch(bodyParser, (req, res, next) => {
+    const { 
+      habit_name,
+      goal,
+      description
+    } = req.body;
+
+    const newHabit = { 
+      habit_name,
+      goal,
+      description
+    };
+    
+    const numberOfValues = Object.values(newHabit).filter(Boolean).length;
+    if (numberOfValues === 0)
+      return res.status(400).json({
+        error: {
+          message: 'Request body must content either \'name\', \'folder id\', \'modified\' or \'content\''
+        }
+      });
+
+    HabitsService.updateById(
+      req.app.get('db'),
+      req.user.id,
+      req.params.id,
+      newHabit
+    )
+      .then(() => {
+        res.status(204).end();
+      })
+      .catch(next);
+  });
+
+module.exports = habitsRouter;
