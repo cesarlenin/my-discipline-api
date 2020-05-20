@@ -6,8 +6,11 @@ const habitsRouter = express.Router()
 
 habitsRouter
   .route('/')
+  .all(requireAuth)
   .get((req, res, next) => {
-    HabitsService.getAllHabits(req.app.get('db'))
+    // console.log(req.user)
+    //get user_id from the authToken
+    HabitsService.getAllHabits(req.app.get('db'),req.user.id)
       .then(habits => {
         res.json(HabitsService.serializeHabits(habits))
       })

@@ -32,7 +32,7 @@ describe.only('Habits Endpoints', function() {
       it('responds with 200 and an empty list', () => {
         return supertest(app)
           .get('/api/habits')
-          //.set('Authorization', helpers.makeAuthHeader(testUsers[0]))
+          .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
           .expect(200, []);
       });
     });
@@ -55,7 +55,7 @@ describe.only('Habits Endpoints', function() {
         );
         return supertest(app)
           .get('/api/habits')
-          //.set('Authorization', helpers.makeAuthHeader(testUsers[0]))
+          .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
           .expect(200, expectedHabits);
       });
     });

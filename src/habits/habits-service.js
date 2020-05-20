@@ -2,7 +2,7 @@ const xss = require('xss');
 const Treeize = require('treeize');
 
 const HabitsService = {
-  getAllHabits(db) {
+  getAllHabits(db,userId) {
     return db
       .from('my_discipline_habit AS md')
       .select(
@@ -10,24 +10,24 @@ const HabitsService = {
         'md.habit_name',
         'md.date_created',
         'md.description ',
-        'md.goal',
-        ...userFields
+        'md.goal'
       )
+      // .leftJoin(
+      //   'my_discipline_actions  AS act',
+      //   'md.id',
+      //   'act.habit_id'
+      // )
       .leftJoin(
-        'my_discipline_action  AS act',
-        'md.id',
-        'act.habit_id'
-      )
-      .leftJoin(
-        'thingful_users AS usr',
+        'my_discipline_users AS usr',
         'md.user_id',
         'usr.id'
       )
-      .groupBy('md.id', 'usr.id');
+      .groupBy('md.id', 'usr.id')
+      .where('usr.id', userId);
   },
 
-  getById(db, id) {
-    return HabitsService.getAllHabits(db)
+  getById(db, userId, id) {
+    return HabitsService.getAllHabits(db, userId)
       .where('md.id', id)
       .first();
   },
@@ -47,7 +47,7 @@ const HabitsService = {
       description: xss(habitData.description),
       date_created: habitData.date_created,
       goal: habitData.goal,
-      user: habitData.user || {}
+      // user: habitData.user || {}
     };
   },
 
@@ -64,7 +64,7 @@ const HabitsService = {
       id: actionData.id,
       bool: actionData.bool,
       habit_id: actionData.habit_id,
-      user: actionData.user || {},
+      // user: actionData.user || {},
       date_created: actionData.date_created,
     };
   },
