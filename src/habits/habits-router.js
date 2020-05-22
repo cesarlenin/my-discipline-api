@@ -12,7 +12,7 @@ habitsRouter
   .get((req, res, next) => {
     HabitsService.getAllHabits(req.app.get('db'),req.user.id)
       .then(habits => {
-        res.json(HabitsService.serializeHabits(habits));
+        res.status(200).json(HabitsService.serializeHabits(habits));
       })
       .catch(next);
   })
@@ -107,8 +107,8 @@ habitsRouter
       req.params.id,
       newHabit
     )
-      .then(() => {
-        res.status(204).end();
+      .then((data) => {
+        res.status(201).json(HabitsService.serializeHabit(data[0]));
       })
       .catch(next);
   });

@@ -12,6 +12,7 @@ const HabitsService = {
         'description ',
         'goal'
       )
+      .orderBy('date_created')
       .where({'user_id': userId});
   },
 
@@ -45,7 +46,8 @@ const HabitsService = {
   updateById(db,userId, id, data) {
     return db('my_discipline_habit')
       .where({'id':id, 'user_id': userId})
-      .update(data);
+      .update(data)
+      .returning('*');
   },
 
   serializeHabits(habits) {

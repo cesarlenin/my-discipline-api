@@ -12,8 +12,9 @@ actionsRouter
   .get((req, res, next) => {
     ActionsService.getAllActions(req.app.get('db'),req.user.id)
       .then(actions => {
-        res.json(ActionsService.serializeActions(actions));
+        res.status(200).json(ActionsService.serializeActions(actions));
       })
+
       .catch(next);
   })
 
