@@ -101,6 +101,7 @@ describe.only('Habits Endpoints', function() {
           .expect(404, {'error':{'message':'habit was not found'}});
       });
     });
+  });
     //GET /api/habits/:id ends here
 
     describe('POST /api/habits', () => {
@@ -130,21 +131,45 @@ describe.only('Habits Endpoints', function() {
           .expect(400,'name is required');
       });
     });
-    //POST /api/habits ends here
-    // describe('PATCH /api/habits/id', () => {
-    //   beforeEach(() =>helpers.seedUsers(db, testUsers));
+    // POST /api/habits ends here
+    describe('PATCH /api/habits/id', () => {
+      context('Given there are habits in the database', () => {
+        beforeEach('insert habits', () =>
+          helpers.seedHabitsTables(
+            db,
+            testUsers,
+            testHabits,
+            testActions
+          )
+        );
+      it('responds with 201 and patch habit', () => {
+        const HabitId= 1; 
+        const habit = { ...testHabits[0] };
+        expectedHabit = helpers.makeExpectedHabits(habit);
+        delete habit.id;
+        delete habit.user_id;
 
-    //   it('responds with 200 and post habit', () => {
+        return supertest(app)
+          .patch(`/api/habits/${HabitId}`)
+          .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
+          .send(habit)
+          .expect(201,expectedHabit);
+      });
 
-      
-    //     return supertest(app)
-    //       .patch('/api/habits')
-    //       .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
-    //       .send(habit)
-    //       .expect(200,expectedHabit);
-    //   });
-    // });
+      it('responds with 201 and patch habit', () => {
+        const HabitId= 1; 
 
+        return supertest(app)
+          .patch(`/api/habits/${HabitId}`)
+          .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
+          .send()
+          .expect(400,{"error":{"message":"Request body must content either 'habit_name', 'goal' or 'description'"}});
+      });
+    });
   });
+  // end of PATCH /api/habits/id
+
+
 
 });
+
