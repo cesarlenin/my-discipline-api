@@ -101,7 +101,7 @@ describe.only('Habits Endpoints', function() {
           .expect(404, {'error':{'message':'habit was not found'}});
       });
     });
-  });
+});
     //GET /api/habits/:id ends here
 
     describe('POST /api/habits', () => {
@@ -166,10 +166,39 @@ describe.only('Habits Endpoints', function() {
           .expect(400,{"error":{"message":"Request body must content either 'habit_name', 'goal' or 'description'"}});
       });
     });
+    });
+    // end of PATCH /api/habits/id
+
+    describe('DELETE /api/habits', () => {
+      context('Given there are habits in the database', () => {
+        beforeEach('insert habits', () =>
+          helpers.seedHabitsTables(
+            db,
+            testUsers,
+            testHabits,
+            testActions
+          )
+        );
+        it('responds with 204', () => {
+          const HabitId= 1; 
+
+          return supertest(app)
+            .delete(`/api/habits/${HabitId}`)
+            .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
+            .expect(204);
+        });
+
+        it('responds with 204', () => {
+          const HabitId= 999; 
+
+          return supertest(app)
+            .delete(`/api/habits/${HabitId}`)
+            .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
+            .expect(404,{error: { message: 'habit was not found' }});
+        });
+      });
+
   });
-  // end of PATCH /api/habits/id
-
-
-
+  
 });
 
