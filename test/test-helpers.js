@@ -122,27 +122,13 @@ function makeActionsArray(users, habits) {
   ];
 }
 
-function makeExpectedHabits(users, habit, actions=[]) {
-  const user = users
-    .find(user => user.id === habit.user_id)
-
-  const habitActions = actions
-    .filter(action => action.habit_id === habit.id)
-
+function makeExpectedHabits(habit) {
   return {
     id: habit.id,
-    goal: habit.goal,
     habit_name: habit.habit_name,
     description: habit.description,
     date_created: habit.date_created,
-
-    user: {
-      id: user.id,
-      user_name: user.user_name,
-      full_name: user.full_name,
-      nickname: user.nickname,
-      date_created: user.date_created,
-    },
+    goal: habit.goal
   }
 }
 
@@ -168,27 +154,9 @@ function makeExpectedThingReviews(users, thingId, reviews) {
   })
 }
 
-function makeMaliciousThing(user) {
-  const maliciousThing = {
-    id: 911,
-    image: 'http://placehold.it/500x500',
-    date_created: new Date().toISOString(),
-    title: 'Naughty naughty very naughty <script>alert("xss");</script>',
-    user_id: user.id,
-    content: `Bad image <img src="https://url.to.file.which/does-not.exist" onerror="alert(document.cookie);">. But not <strong>all</strong> bad.`,
-  }
-  const expectedThing = {
-    ...makeExpectedHabits([user], maliciousThing),
-    title: 'Naughty naughty very naughty &lt;script&gt;alert(\"xss\");&lt;/script&gt;',
-    content: `Bad image <img src="https://url.to.file.which/does-not.exist">. But not <strong>all</strong> bad.`,
-  }
-  return {
-    maliciousThing,
-    expectedThing,
-  }
-}
 
-function makeThingsFixtures() {
+
+function makeHabitsFixtures() {
   const testUsers = makeUsersArray()
   const testHabits = makeHabitsArray(testUsers)
   const testActions = makeActionsArray(testUsers, testHabits)
@@ -251,15 +219,6 @@ function seedHabitsTables(db, users, habits, actions=[]) {
 }
 
 
-function seedMaliciousThing(db, user, habit) {
-  return seedUsers(db, [user])
-    .then(() =>
-      db
-        .into('my_discipline_habit')
-        .insert([habit])
-    )
-}
-
 function makeAuthHeader(user, secret = process.env.JWT_SECRET) {
   const token = jwt.sign({ user_id: user.id }, secret, {
     subject: user.user_name,
@@ -276,12 +235,10 @@ module.exports = {
   makeHabitsArray,
   makeExpectedHabits,
   makeExpectedThingReviews,
-  makeMaliciousThing,
   makeActionsArray,
 
-  makeThingsFixtures,
+  makeHabitsFixtures,
   cleanTables,
   seedHabitsTables,
-  seedMaliciousThing,
   seedUsers
 }

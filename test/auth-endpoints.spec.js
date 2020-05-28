@@ -6,7 +6,7 @@ const helpers = require('./test-helpers');
 describe('Auth Endpoints', function() {
   let db;
 
-  const { testUsers } = helpers.makeThingsFixtures();
+  const { testUsers } = helpers.makeHabitsFixtures();
   const testUser = testUsers[0];
 
   before('make knex instance', () => {
@@ -72,7 +72,7 @@ describe('Auth Endpoints', function() {
           password: testUser.password,
         };
         const expectedToken = jwt.sign(
-          { user_id: testUser.id }, // payload
+          { user_id: testUser.id },
           process.env.JWT_SECRET,
           {
             subject: testUser.user_name,
