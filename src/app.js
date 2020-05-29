@@ -3,9 +3,7 @@ const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
 const helmet = require('helmet');
-const {
-  NODE_ENV
-} = require('./config');
+const {NODE_ENV} = require('./config');
 const errorHandler = require('./error-handler');
 const habitsRouter = require('./habits/habits-router');
 const actionsRouter = require('./actions/actions-router');
