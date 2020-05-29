@@ -2,7 +2,7 @@ const xss = require('xss');
 const Treeize = require('treeize');
 
 const HabitsService = {
-  getAllHabits(db,userId) {
+  getAllHabits(db, userId) {
     return db
       .from('my_discipline_habit')
       .select(
@@ -13,11 +13,13 @@ const HabitsService = {
         'goal'
       )
       .orderBy('date_created')
-      .where({'user_id': userId});
+      .where({
+        'user_id': userId
+      });
   },
 
   getById(db, userId, id) {
-    return   db   
+    return db
       .from('my_discipline_habit')
       .select(
         'id',
@@ -26,7 +28,10 @@ const HabitsService = {
         'description ',
         'goal'
       )
-      .where({'id':id, 'user_id': userId})
+      .where({
+        'id': id,
+        'user_id': userId
+      })
       .first();
   },
 
@@ -37,15 +42,21 @@ const HabitsService = {
       .then(rows => rows[0]);
   },
 
-  deleteById(db,userId, id) {
+  deleteById(db, userId, id) {
     return db('my_discipline_habit')
-      .where({'id':id, 'user_id': userId})
+      .where({
+        'id': id,
+        'user_id': userId
+      })
       .delete();
   },
 
-  updateById(db,userId, id, data) {
+  updateById(db, userId, id, data) {
     return db('my_discipline_habit')
-      .where({'id':id, 'user_id': userId})
+      .where({
+        'id': id,
+        'user_id': userId
+      })
       .update(data)
       .returning('*');
   },
@@ -57,7 +68,7 @@ const HabitsService = {
   serializeHabit(habit) {
     const habitTree = new Treeize();
 
-    const habitData = habitTree.grow([ habit ]).getData()[0];
+    const habitData = habitTree.grow([habit]).getData()[0];
 
     return {
       id: habitData.id,
@@ -70,5 +81,3 @@ const HabitsService = {
 };
 
 module.exports = HabitsService;
-
-

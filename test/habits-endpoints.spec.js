@@ -2,7 +2,7 @@ const knex = require('knex');
 const app = require('../src/app');
 const helpers = require('./test-helpers');
 
-describe('Habits Endpoints', function() {
+describe('Habits Endpoints', function () {
   let db;
 
   const {
@@ -27,7 +27,7 @@ describe('Habits Endpoints', function() {
 
   describe('GET /api/habits', () => {
     context('Given no habits', () => {
-      beforeEach(() =>helpers.seedUsers(db, testUsers));
+      beforeEach(() => helpers.seedUsers(db, testUsers));
       it('responds with 200 and an empty list', () => {
         return supertest(app)
           .get('/api/habits')
@@ -48,7 +48,7 @@ describe('Habits Endpoints', function() {
         const expectedHabits = testHabits.map(habits =>
           helpers.makeExpectedHabits(habits)
         );
-        const filterHabits=expectedHabits.filter(user =>user.id === testUsers[0].id);
+        const filterHabits = expectedHabits.filter(user => user.id === testUsers[0].id);
         return supertest(app)
           .get('/api/habits')
           .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
@@ -59,13 +59,17 @@ describe('Habits Endpoints', function() {
   //GET /api/habits ends here
   describe('GET /api/habits/:id', () => {
     context('Given no habits', () => {
-      beforeEach(() =>helpers.seedUsers(db, testUsers));
+      beforeEach(() => helpers.seedUsers(db, testUsers));
       it('responds with 404', () => {
         const HabitId = 123456;
         return supertest(app)
           .get(`/api/habits/${HabitId}`)
           .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
-          .expect(404, {error: { message: 'habit was not found' }});
+          .expect(404, {
+            error: {
+              message: 'habit was not found'
+            }
+          });
       });
     });
 
@@ -98,77 +102,66 @@ describe('Habits Endpoints', function() {
         return supertest(app)
           .get(`/api/habits/${HabitId}`)
           .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
-          .expect(404, {'error':{'message':'habit was not found'}});
+          .expect(404, {
+            'error': {
+              'message': 'habit was not found'
+            }
+          });
       });
     });
-});
-    //GET /api/habits/:id ends here
+  });
+  //GET /api/habits/:id ends here
+  describe('POST /api/habits', () => {
+    beforeEach(() => helpers.seedUsers(db, testUsers));
 
-    describe('POST /api/habits', () => {
-      beforeEach(() =>helpers.seedUsers(db, testUsers));
-
-      it('responds with 200 and post habit', () => {
-      const habit = { ...testHabits[0] };
+    it('responds with 200 and post habit', () => {
+      const habit = {
+        ...testHabits[0]
+      };
       delete habit.date_created;
 
       let expectedHabit = helpers.makeExpectedHabits(habit);
       expectedHabit.user_id = 1;
-      let dateCreated=new Date();
-      dateCreated.setUTCHours(0,0,0,0);
+      let dateCreated = new Date();
+      dateCreated.setUTCHours(0, 0, 0, 0);
       expectedHabit.date_created = dateCreated.toISOString();
 
-        return supertest(app)
-          .post('/api/habits')
-          .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
-          .send(habit)
-          .expect(200,expectedHabit);
-      });
-      // it('responds with 200 and post habit', () => {
-      //   const habit = { ...testHabits[0] };
-      //   delete habit.date_created;
-  
-      //   let expectedhabit = helpers.makeExpectedHabits(habit);
-      //   expectedHabit.user_id = 1;
-      //   expectedHabit.date_created = new Date().toISOString();
-
-      //   console.log(expectedHabit)
-      //     return supertest(app)
-      //       .post('/api/habits')
-      //       .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
-      //       .send(habit)
-      //       .expect(200)
-      //       .expect('Content-Type', /json/)
-      //       .then((res) => {
-      //         expect(res.body).to.be.an('object');
-      //         expect(res.body).to.eql(expectedHabit);
-      //   });
-      // });
-
-      it('responds with 400 and error message', () => {
-        const habit = { ...testHabits[0] };
-      delete habit.habit_name;
-      
-        return supertest(app)
-          .post('/api/habits')
-          .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
-          .send(habit)
-          .expect(400,'name is required');
-      });
+      return supertest(app)
+        .post('/api/habits')
+        .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
+        .send(habit)
+        .expect(200, expectedHabit);
     });
-    // POST /api/habits ends here
-    describe('PATCH /api/habits/id', () => {
-      context('Given there are habits in the database', () => {
-        beforeEach('insert habits', () =>
-          helpers.seedHabitsTables(
-            db,
-            testUsers,
-            testHabits,
-            testActions
-          )
-        );
+
+    it('responds with 400 and error message', () => {
+      const habit = {
+        ...testHabits[0]
+      };
+      delete habit.habit_name;
+
+      return supertest(app)
+        .post('/api/habits')
+        .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
+        .send(habit)
+        .expect(400, 'name is required');
+    });
+  });
+  // POST /api/habits ends here
+  describe('PATCH /api/habits/id', () => {
+    context('Given there are habits in the database', () => {
+      beforeEach('insert habits', () =>
+        helpers.seedHabitsTables(
+          db,
+          testUsers,
+          testHabits,
+          testActions
+        )
+      );
       it('responds with 201 and patch habit', () => {
-        const HabitId= 1; 
-        const habit = { ...testHabits[0] };
+        const HabitId = 1;
+        const habit = {
+          ...testHabits[0]
+        };
         expectedHabit = helpers.makeExpectedHabits(habit);
         delete habit.id;
         delete habit.user_id;
@@ -177,52 +170,59 @@ describe('Habits Endpoints', function() {
           .patch(`/api/habits/${HabitId}`)
           .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
           .send(habit)
-          .expect(201,expectedHabit);
+          .expect(201, expectedHabit);
       });
 
       it('responds with 201 and patch habit', () => {
-        const HabitId= 1; 
+        const HabitId = 1;
 
         return supertest(app)
           .patch(`/api/habits/${HabitId}`)
           .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
           .send()
-          .expect(400,{"error":{"message":"Request body must content either 'habit_name', 'goal' or 'description'"}});
+          .expect(400, {
+            "error": {
+              "message": "Request body must content either 'habit_name', 'goal' or 'description'"
+            }
+          });
       });
     });
-    });
-    // end of PATCH /api/habits/id
-
-    describe('DELETE /api/habits/id', () => {
-      context('Given there are habits in the database', () => {
-        beforeEach('insert habits', () =>
-          helpers.seedHabitsTables(
-            db,
-            testUsers,
-            testHabits,
-            testActions
-          )
-        );
-        it('responds with 204', () => {
-          const HabitId= 1; 
-
-          return supertest(app)
-            .delete(`/api/habits/${HabitId}`)
-            .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
-            .expect(204);
-        });
-
-        it('responds with 204', () => {
-          const HabitId= 999; 
-
-          return supertest(app)
-            .delete(`/api/habits/${HabitId}`)
-            .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
-            .expect(404,{error: { message: 'habit was not found' }});
-        });
-      });
-      // end of DELETE /api/habits/id
   });
-  
-});
+  // end of PATCH /api/habits/id
 
+  describe('DELETE /api/habits/id', () => {
+    context('Given there are habits in the database', () => {
+      beforeEach('insert habits', () =>
+        helpers.seedHabitsTables(
+          db,
+          testUsers,
+          testHabits,
+          testActions
+        )
+      );
+      it('responds with 204', () => {
+        const HabitId = 1;
+
+        return supertest(app)
+          .delete(`/api/habits/${HabitId}`)
+          .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
+          .expect(204);
+      });
+
+      it('responds with 204', () => {
+        const HabitId = 999;
+
+        return supertest(app)
+          .delete(`/api/habits/${HabitId}`)
+          .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
+          .expect(404, {
+            error: {
+              message: 'habit was not found'
+            }
+          });
+      });
+    });
+    // end of DELETE /api/habits/id
+  });
+
+});

@@ -2,8 +2,7 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 
 function makeUsersArray() {
-  return [
-    {
+  return [{
       id: 1,
       user_name: 'test-user-1',
       full_name: 'Test user 1',
@@ -39,8 +38,7 @@ function makeUsersArray() {
 }
 
 function makeHabitsArray(users) {
-  return [
-    {
+  return [{
       id: 1,
       habit_name: 'First test thing!',
       goal: 5,
@@ -76,8 +74,7 @@ function makeHabitsArray(users) {
 }
 
 function makeActionsArray(users, habits) {
-  return [
-    {
+  return [{
       id: 1,
       habit_id: habits[0].id,
       user_id: users[0].id,
@@ -134,12 +131,12 @@ function makeExpectedHabits(habit) {
 
 function makeExpectedActions(action) {
 
-    return {
-      id: action.id,
-      date_created: action.date_created,
-      habit_id: action.habit_id,
-      user_id: action.user_id
-    }
+  return {
+    id: action.id,
+    date_created: action.date_created,
+    habit_id: action.habit_id,
+    user_id: action.user_id
+  }
 }
 
 
@@ -147,20 +144,24 @@ function makeHabitsFixtures() {
   const testUsers = makeUsersArray()
   const testHabits = makeHabitsArray(testUsers)
   const testActions = makeActionsArray(testUsers, testHabits)
-  return { testUsers, testHabits, testActions }
+  return {
+    testUsers,
+    testHabits,
+    testActions
+  }
 }
 
 
 function cleanTables(db) {
   return db.transaction(trx =>
-  trx.raw(
-    `TRUNCATE
+    trx.raw(
+      `TRUNCATE
     my_discipline_habit,
     my_discipline_users,
     my_discipline_actions
     `
-  )
-  .then(() =>
+    )
+    .then(() =>
       Promise.all([
         trx.raw(`ALTER SEQUENCE my_discipline_habit_id_seq minvalue 0 START WITH 1`),
         trx.raw(`ALTER SEQUENCE my_discipline_users_id_seq minvalue 0 START WITH 1`),
@@ -187,7 +188,7 @@ function seedUsers(db, users) {
     )
 }
 
-function seedHabitsTables(db, users, habits, actions=[]) {
+function seedHabitsTables(db, users, habits, actions = []) {
   return db.transaction(async trx => {
     await seedUsers(trx, users)
     await trx.into('my_discipline_habit').insert(habits)
@@ -207,7 +208,9 @@ function seedHabitsTables(db, users, habits, actions=[]) {
 
 
 function makeAuthHeader(user, secret = process.env.JWT_SECRET) {
-  const token = jwt.sign({ user_id: user.id }, secret, {
+  const token = jwt.sign({
+    user_id: user.id
+  }, secret, {
     subject: user.user_name,
     algorithm: 'HS256',
   })

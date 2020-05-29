@@ -2,7 +2,7 @@ const knex = require('knex');
 const app = require('../src/app');
 const helpers = require('./test-helpers');
 
-describe('actions Endpoints', function() {
+describe('actions Endpoints', function () {
   let db;
 
   const {
@@ -27,7 +27,7 @@ describe('actions Endpoints', function() {
 
   describe('GET /api/actions', () => {
     context('Given no actions', () => {
-      beforeEach(() =>helpers.seedUsers(db, testUsers,testHabits));
+      beforeEach(() => helpers.seedUsers(db, testUsers, testHabits));
       it('responds with 200 and an empty list', () => {
         return supertest(app)
           .get('/api/actions')
@@ -49,8 +49,8 @@ describe('actions Endpoints', function() {
           helpers.makeExpectedActions(action)
         );
 
-        let filterActions=expectedActions.filter(action =>action.user_id === testUsers[0].id);
-        filterActions.map(action =>delete action.user_id);
+        let filterActions = expectedActions.filter(action => action.user_id === testUsers[0].id);
+        filterActions.map(action => delete action.user_id);
 
         return supertest(app)
           .get('/api/actions')
@@ -72,7 +72,9 @@ describe('actions Endpoints', function() {
     );
 
     it('responds with 200 and post action', () => {
-      let action = { ...testActions[0] };
+      let action = {
+        ...testActions[0]
+      };
 
       let expectedAction = helpers.makeExpectedActions(action);
       expectedAction.id = 8;
@@ -81,22 +83,23 @@ describe('actions Endpoints', function() {
         .post('/api/actions')
         .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
         .send(action)
-        .expect(200,expectedAction);
+        .expect(200, expectedAction);
     });
 
     it('responds with 400 and error message', () => {
-      const action = { ...testActions[0] };
-    delete action.habit_id;
-    
+      const action = {
+        ...testActions[0]
+      };
+      delete action.habit_id;
+
       return supertest(app)
         .post('/api/actions')
         .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
         .send(action)
-        .expect(400,'habit id needs to be a number');
+        .expect(400, 'habit id needs to be a number');
     });
   });
 
 
 
 });
-

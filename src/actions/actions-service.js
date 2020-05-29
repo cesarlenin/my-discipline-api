@@ -1,7 +1,7 @@
 const Treeize = require('treeize');
 
 const ActionsService = {
-  getAllActions(db,userId) {
+  getAllActions(db, userId) {
     return db
       .from('my_discipline_actions AS md')
       .select(
@@ -9,7 +9,9 @@ const ActionsService = {
         'date_created',
         'habit_id'
       )
-      .where({'user_id': userId});
+      .where({
+        'user_id': userId
+      });
   },
 
   insertAction(db, data) {
@@ -18,16 +20,16 @@ const ActionsService = {
       .returning('*')
       .then(rows => rows[0]);
   },
-   
+
   serializeActions(actions) {
     return actions.map(this.serializeAction);
   },
-    
+
   serializeAction(action) {
     const actionTree = new Treeize();
-    
-    const actionData = actionTree.grow([ action ]).getData()[0];
-    
+
+    const actionData = actionTree.grow([action]).getData()[0];
+
     return {
       id: actionData.id,
       date_created: actionData.date_created,
