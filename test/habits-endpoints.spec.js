@@ -2,7 +2,7 @@ const knex = require('knex');
 const app = require('../src/app');
 const helpers = require('./test-helpers');
 
-describe.only('Habits Endpoints', function() {
+describe('Habits Endpoints', function() {
   let db;
 
   const {
@@ -108,11 +108,13 @@ describe.only('Habits Endpoints', function() {
       beforeEach(() =>helpers.seedUsers(db, testUsers));
 
       it('responds with 200 and post habit', () => {
-        const habit = { ...testHabits[0] };
+      const habit = { ...testHabits[0] };
+      delete habit.date_created;
+
       expectedHabit = helpers.makeExpectedHabits(habit);
+      expectedHabit.user_id = 1;
       expectedHabit.date_created = new Date().toISOString();
-      expectedHabit.user_id = 1
-      
+
         return supertest(app)
           .post('/api/habits')
           .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
@@ -169,7 +171,7 @@ describe.only('Habits Endpoints', function() {
     });
     // end of PATCH /api/habits/id
 
-    describe('DELETE /api/habits', () => {
+    describe('DELETE /api/habits/id', () => {
       context('Given there are habits in the database', () => {
         beforeEach('insert habits', () =>
           helpers.seedHabitsTables(
@@ -197,7 +199,7 @@ describe.only('Habits Endpoints', function() {
             .expect(404,{error: { message: 'habit was not found' }});
         });
       });
-
+      // end of DELETE /api/habits/id
   });
   
 });

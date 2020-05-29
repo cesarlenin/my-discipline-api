@@ -132,27 +132,16 @@ function makeExpectedHabits(habit) {
   }
 }
 
-function makeExpectedThingReviews(users, thingId, reviews) {
-  const expectedReviews = reviews
-    .filter(review => review.thing_id === thingId)
+function makeExpectedActions(action) {
 
-  return expectedReviews.map(review => {
-    const reviewUser = users.find(user => user.id === review.user_id)
     return {
-      id: review.id,
-      text: review.text,
-      rating: review.rating,
-      date_created: review.date_created,
-      user: {
-        id: reviewUser.id,
-        user_name: reviewUser.user_name,
-        full_name: reviewUser.full_name,
-        nickname: reviewUser.nickname,
-        date_created: reviewUser.date_created,
-      }
+      id: action.id,
+      date_created: action.date_created,
+      habit_id: action.habit_id,
+      user_id: action.user_id
     }
-  })
 }
+
 
 
 
@@ -234,7 +223,7 @@ module.exports = {
   makeUsersArray,
   makeHabitsArray,
   makeExpectedHabits,
-  makeExpectedThingReviews,
+  makeExpectedActions,
   makeActionsArray,
 
   makeHabitsFixtures,
