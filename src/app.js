@@ -10,6 +10,7 @@ const actionsRouter = require('./actions/actions-router');
 const authRouter = require('./auth/auth-router');
 
 
+
 const app = express();
 
 const morganOption = (NODE_ENV === 'production') ? 'tiny' : 'common';
@@ -22,6 +23,7 @@ app.use(cors());
 app.use('/api/habits', habitsRouter);
 app.use('/api/actions', actionsRouter);
 app.use('/api/auth', authRouter);
+
 
 app.get('/', (req, res) => {
   res.send('Hello, world!');
