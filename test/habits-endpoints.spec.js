@@ -111,9 +111,11 @@ describe('Habits Endpoints', function() {
       const habit = { ...testHabits[0] };
       delete habit.date_created;
 
-      expectedHabit = helpers.makeExpectedHabits(habit);
+      let expectedHabit = helpers.makeExpectedHabits(habit);
       expectedHabit.user_id = 1;
-      expectedHabit.date_created = new Date().toISOString();
+      let dateCreated=new Date();
+      dateCreated.setUTCHours(0,0,0,0);
+      expectedHabit.date_created = dateCreated.toISOString();
 
         return supertest(app)
           .post('/api/habits')
@@ -121,6 +123,26 @@ describe('Habits Endpoints', function() {
           .send(habit)
           .expect(200,expectedHabit);
       });
+      // it('responds with 200 and post habit', () => {
+      //   const habit = { ...testHabits[0] };
+      //   delete habit.date_created;
+  
+      //   let expectedhabit = helpers.makeExpectedHabits(habit);
+      //   expectedHabit.user_id = 1;
+      //   expectedHabit.date_created = new Date().toISOString();
+
+      //   console.log(expectedHabit)
+      //     return supertest(app)
+      //       .post('/api/habits')
+      //       .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
+      //       .send(habit)
+      //       .expect(200)
+      //       .expect('Content-Type', /json/)
+      //       .then((res) => {
+      //         expect(res.body).to.be.an('object');
+      //         expect(res.body).to.eql(expectedHabit);
+      //   });
+      // });
 
       it('responds with 400 and error message', () => {
         const habit = { ...testHabits[0] };
