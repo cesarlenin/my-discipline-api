@@ -143,8 +143,6 @@ function makeExpectedActions(action) {
 }
 
 
-
-
 function makeHabitsFixtures() {
   const testUsers = makeUsersArray()
   const testHabits = makeHabitsArray(testUsers)
