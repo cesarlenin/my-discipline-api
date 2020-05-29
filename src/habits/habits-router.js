@@ -1,9 +1,7 @@
 const express = require('express');
 const logger = require('../logger');
 const HabitsService = require('./habits-service');
-const {
-  requireAuth
-} = require('../../middleware/jwt-auth');
+const { requireAuth } = require('../../middleware/jwt-auth');
 
 const habitsRouter = express.Router();
 const bodyParser = express.json();

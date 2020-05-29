@@ -1,10 +1,7 @@
 const express = require('express');
 const logger = require('../logger');
 const ActionsService = require('./actions-service');
-const {
-  requireAuth
-} = require('../../middleware/jwt-auth');
-
+const { requireAuth } = require('../../middleware/jwt-auth');
 const actionsRouter = express.Router();
 const bodyParser = express.json();
 
