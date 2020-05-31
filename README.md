@@ -4,7 +4,7 @@ My Discipline
 
 ## Links
 live site: [https://my-discipline.cesarlenin.now.sh/](https://my-discipline.cesarlenin.now.sh/)<br />
-backend:[https://git.heroku.com/my-discipline.git/](https://git.heroku.com/my-discipline.git/)
+backend:[https://my-discipline.herokuapp.com/](https://my-discipline.herokuapp.com/)
 ## Using The API
 Currently the API supports GET, POST, DELETE, and PATCH endpoints.
 
