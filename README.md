@@ -15,7 +15,7 @@ Currently the API supports GET, POST, DELETE, and PATCH endpoints.
     + POST Habits: POST (https://my-discipline.herokuapp.com/api/habits/)<br />
     + DELETE Habit:DELETE (https://my-discipline.herokuapp.com/api/habits/<habit_id>)<br />
     + PATCH Habit:PATCH (https://my-discipline.herokuapp.com/api/habits/<habit_id>)<br />
-    + GET Actions: GET (https://my-discipline.herokuapp.com/actions)<br />
+    + GET Actions: GET (https://my-discipline.herokuapp.com/api/actions)<br />
     + POST Action: POST (https://my-discipline.herokuapp.com/api/actions/)
 
 ## Screen Shots
