@@ -37,3 +37,5 @@ and quickly seeing their consistency in a calendar every time they log in.
   - JavaScript
   - Postgresql 
   - Mocha, Chai
+  - Express
+  - Jest
