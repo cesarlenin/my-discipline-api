@@ -1,10 +1,10 @@
 ## Application
-
 My Discipline
 
 ## Links
 live site: [https://my-discipline.cesarlenin.now.sh/](https://my-discipline.cesarlenin.now.sh/)<br />
 backend:[https://my-discipline.herokuapp.com/](https://my-discipline.herokuapp.com/)
+
 ## Using The API
 Currently the API supports GET, POST, DELETE, and PATCH endpoints.
 
@@ -17,3 +17,23 @@ Currently the API supports GET, POST, DELETE, and PATCH endpoints.
     + PATCH Habit:PATCH (https://my-discipline.herokuapp.com/api/habits/<habit_id>)<br />
     + GET Actions: GET (https://my-discipline.herokuapp.com/actions)<br />
     + POST Action: POST (https://my-discipline.herokuapp.com/api/actions/)
+
+## Screen Shots
+![landing](images/landing.png)<br />
+![home](images/home.png)<br />
+![create](images/create.png)<br />
+![detail](images/detail.png)<br />
+![edit](images/edit.png)<br />
+![add](images/add.png)<br />
+
+### Summary
+- My Discipline was created to be a simple way to keep track and organize all of your habits.  
+The user starts off by setting goals they want to meet. Then generating a collection of habits they want to have,
+and quickly seeing their consistency in a calendar every time they log in.
+
+## Technologies
+  - React
+  - Node.js
+  - JavaScript
+  - Postgresql 
+  - Mocha, Chai
