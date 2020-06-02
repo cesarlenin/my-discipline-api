@@ -2,7 +2,7 @@
 My Discipline
 
 ## Links
-live site: [https://my-discipline.cesarlenin.now.sh/](https://my-discipline.cesarlenin.now.sh/)<br />
+live site: [https://my-discipline.now.sh](https://my-discipline.now.sh)<br />
 backend:[https://my-discipline.herokuapp.com/](https://my-discipline.herokuapp.com/)
 
 ## Using The API
